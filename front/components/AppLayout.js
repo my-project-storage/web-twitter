@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Menu, Input, Row, Col } from 'antd';
+import styled from 'styled-components';
 
 import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
+
+const SearchInput = styled(Input.Search)`
+  vertical-align: middle;
+`;
 
 // 일부 공통
 const AppLayout = ({ children }) => {
@@ -23,7 +28,7 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item>
-          <Input.Search enterButton style={{ verticalAlign: 'middle' }}></Input.Search>
+          <SearchInput enterButton></SearchInput>
         </Menu.Item>
         <Menu.Item>
           <Link href="/signup">
@@ -40,7 +45,7 @@ const AppLayout = ({ children }) => {
       {/* gutter 는 컬럼 사이의 간격을 줌 */}
       <Row gutter={8}>
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserProfile /> : <LoginForm />}
+          {isLoggedIn ? <UserProfile setIsLoggedIn={setIsLoggedIn} /> : <LoginForm setIsLoggedIn={setIsLoggedIn} />}
         </Col>
         <Col xs={24} md={12}>
           {children}
