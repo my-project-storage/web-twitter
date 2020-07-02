@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Form, Input, Button } from 'antd';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import useInput from '../hooks/useInput';
 import { useDispatch } from 'react-redux';
