@@ -4,6 +4,8 @@ import Head from 'next/head';
 import 'antd/dist/antd.css';
 import wrapper from '../store/configureStore';
 
+import withReduxSaga from 'next-redux-saga';
+
 // 공통 파일
 const Root = ({ Component }) => {
   return (
@@ -21,4 +23,4 @@ Root.propTypes = {
   Component: PropTypes.elementType.isRequired,
 };
 
-export default wrapper.withRedux(Root);
+export default wrapper.withRedux(withReduxSaga(Root));
