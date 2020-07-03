@@ -4,7 +4,7 @@ import { Card, Popover, Button, Avatar, List, Comment } from 'antd';
 import { RetweetOutlined, HeartOutlined, MessageOutlined, EllipsisOutlined, HeartTwoTone } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import PostImages from './PostImages';
-import CommentForm from './CommentForm';
+import PostCardContent from './PostCardContent';
 
 const PostCard = ({ post }) => {
   const [liked, setLiked] = useState(false);
@@ -47,7 +47,7 @@ const PostCard = ({ post }) => {
       >
         {/* <Image />
         <Buttons></Buttons> */}
-        <Card.Meta avatar={<Avatar>{post.User.nickname[0]}</Avatar>} title={post.User.nickname} description={post.content} />
+        <Card.Meta avatar={<Avatar>{post.User.nickname[0]}</Avatar>} title={post.User.nickname} description={<PostCardContent postData={post.content} />} />
       </Card>
       {commentFormOpened && (
         <div>
