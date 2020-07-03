@@ -1,7 +1,9 @@
 import axios from 'axios';
 // effects 앞에는 항상 yield를 붙여야함
-import { all, fork, take, call, put, takeEvery, takeLatest, takeLeading, throttle, delay, debounce } from 'redux-saga/effects';
+import { all, fork } from 'redux-saga/effects';
 
+import postSaga from './post';
+import userSaga from './user';
 /**
  * @description saga를 사용하는 방법
  * todo: 루트 사가 만들기
@@ -18,75 +20,6 @@ import { all, fork, take, call, put, takeEvery, takeLatest, takeLeading, throttl
  *  ? debounce : 연이어 호출되는 함수들 중 마지막 함수(또는 가장 처음)만 호출하도록 하는 것
  */
 
-function loginAPI(data) {
-  // api 호출
-  return axios.post('/api/login', data);
-}
-function logOutAPI() {
-  return axios.post('/api/logout');
-}
-function addPostAPI(data) {
-  return axios.post('/api/posts', data);
-}
-
-function* login(action) {
-  try {
-    // const result = yield call(loginAPI, action.data);
-    yield delay(1000);
-    // pust은 dispatch
-    yield put({
-      type: 'LOG_IN_SUCCESS',
-      data: result.data,
-    });
-  } catch (err) {
-    yield put({
-      type: 'LOG_IN_FAILURE',
-      data: err.response.data, // 요청에 실패하면 err.response.data 에 담겨있음
-    });
-  }
-}
-function* logout() {
-  try {
-    // const result = yield call(logOutAPI);
-    yield delay(1000);
-    yield put({
-      type: 'LOG_OUT_SUCCESS',
-      data: result.data,
-    });
-  } catch (err) {
-    yield put({
-      type: 'LOG_OUT_FAILURE',
-      data: err.response.data,
-    });
-  }
-}
-function* addPost(action) {
-  try {
-    // const result = yield call(addPostAPI, action.data);
-    yield delay(1000);
-    yield put({
-      type: 'ADD_POST_SUCCESS',
-      data: result.data,
-    });
-  } catch (err) {
-    yield put({
-      type: 'ADD_POST_FAILURE',
-      data: err.resonse.data,
-    });
-  }
-}
-
-function* watchLogin() {
-  // take 는 액션이 실행될 때 까지 기다림
-  yield takeLatest('LOG_IN_REQUEST', login);
-}
-function* watchLogOut() {
-  yield takeLatest('LOG_OUT_REQUEST', logout);
-}
-function* watchAddPost() {
-  yield takeLatest('ADD_POST_REQUEST', addPost);
-}
 export default function* rootSaga() {
-  // all 은 배열을 받음, 동시에 실행할 수 있도록 해줌
-  yield all([fork(watchLogin), fork(watchLogOut), fork(watchAddPost)]);
+  yield all([fork(postSaga), fork(userSaga)]);
 }
