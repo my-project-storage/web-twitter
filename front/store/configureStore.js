@@ -9,7 +9,6 @@ import rootSaga from '../sagas';
 // 미들웨어 만들어보기
 const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
   console.log(action);
-
   return next(action);
 };
 

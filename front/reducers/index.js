@@ -1,7 +1,8 @@
 import { HYDRATE } from 'next-redux-wrapper';
+import { combineReducers } from 'redux';
 import user from './user';
 import post from './post';
-import { combineReducers } from 'redux';
+
 const initialState = {
   user: {},
   post: {},
@@ -9,7 +10,7 @@ const initialState = {
 
 const rootReducer = combineReducers({
   // ssr 를 위해 넣어줌
-  index: (state = {}, action) => {
+  index: (state = initialState, action) => {
     switch (action.type) {
       case HYDRATE:
         return { ...state, ...action.payload };
