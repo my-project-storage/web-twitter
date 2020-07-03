@@ -5,6 +5,7 @@ import { RetweetOutlined, HeartOutlined, MessageOutlined, EllipsisOutlined, Hear
 import { useSelector } from 'react-redux';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
+import CommentForm from './CommentForm';
 
 const PostCard = ({ post }) => {
   const [liked, setLiked] = useState(false);
@@ -61,7 +62,7 @@ const PostCard = ({ post }) => {
                 <Comment author={item.User.nickname} avatar={<Avatar>{item.User.nickname[0]}</Avatar>} content={item.content} />
               </li>
             )}
-          ></List>
+          />
         </div>
       )}
       {/* <CommentForm />
