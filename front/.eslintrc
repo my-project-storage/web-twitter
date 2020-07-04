@@ -29,6 +29,7 @@
     "linebreak-style": "off",
     "no-param-reassign": "off",
     "implicit-arrow-linebreak": "off",
-    "no-confusing-arrow": "off"
+    "no-confusing-arrow": "off",
+    "react/jsx-wrap-multilines": "off"
   }
 }
