@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Form, Input, Checkbox, Button } from 'antd';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
 import useInput from '../hooks/useInput';
 import { SIGN_UP_REQUEST } from '../reducers/user';
 import AppLayout from '../components/AppLayout';
@@ -13,7 +14,19 @@ const ErrorMessage = styled.div`
 
 const SignUp = () => {
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector((state) => state.post);
+  const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (signUpDone) {
+      Router.push('/');
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
 
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -40,7 +53,6 @@ const SignUp = () => {
   const onsubmit = useCallback(() => {
     if (password !== passwordCheck) return setPasswordError(true);
     if (!term) return setTermError(true);
-    console.log(email, nick, password);
     dispatch({
       type: SIGN_UP_REQUEST,
       data: { email, password, nick },
@@ -81,7 +93,7 @@ const SignUp = () => {
         </div>
         <div>
           <div style={{ marginTop: 10 }}>
-            <Button type="primary" htmlType="submit" loading={signUpLoading}>
+            <Button type="primary" loading={signUpLoading} htmlType="submit">
               가입하기
             </Button>
           </div>

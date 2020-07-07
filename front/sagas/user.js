@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { all, fork, delay, put, takeLatest } from 'redux-saga/effects';
+import { all, fork, delay, put, takeLatest, call } from 'redux-saga/effects';
 import {
   LOG_IN_SUCCESS,
   LOG_IN_FAILURE,
@@ -29,6 +29,10 @@ function followAPI(data) {
 function unfollowAPI(data) {
   // api 호출
   return axios.post('/api/unfollow', data);
+}
+function signUpAPI(data) {
+  // api 호출
+  return axios.post('http://localhost:9000/user', data);
 }
 function logOutAPI() {
   return axios.post('/api/logout');
@@ -96,9 +100,12 @@ function* logout() {
     });
   }
 }
-function* signUp() {
+function* signUp(action) {
   try {
-    yield delay(1000);
+    // yield delay(1000);
+    const result = yield call(signUpAPI, action.data);
+    console.log(result);
+
     yield put({
       type: SIGN_UP_SUCCESS,
     });

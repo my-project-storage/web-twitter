@@ -1,3 +1,7 @@
 node_modules
 .env
 .next
+
+# database
+# back/config/dbConfig.json
+dbConfig.json
