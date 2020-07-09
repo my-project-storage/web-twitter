@@ -1,12 +1,14 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const { User } = require('../models');
+const { User, Post } = require('../models');
+const { isLoggedIn, isNotLoggedIn } = require('./middleware');
+
 /**
  * @description 로그인
  * @route POST /user/login
  */
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
     if (info) return res.status(401).send(info.reason);
@@ -16,7 +18,12 @@ router.post('/login', (req, res, next) => {
       // res.setHeader('Cookie', 'afadfadfdsf')
       // req.login 실행하면 serializeUser 실행
       if (loginErr) return next(loginErr);
-      return res.status(200).json(user);
+      const fullUserWithoutPw = await User.findOne({
+        attributes: { exclude: ['password'] },
+        where: { id: user.id },
+        include: [{ model: Post }, { model: User, as: 'Followings' }, { model: User, as: 'Followers' }],
+      });
+      return res.status(200).json(fullUserWithoutPw);
     });
   })(req, res, next);
 });
@@ -25,7 +32,7 @@ router.post('/login', (req, res, next) => {
  * @description 회원가입
  * @route POST /user
  */
-router.post('/', async (req, res, next) => {
+router.post('/', isNotLoggedIn, async (req, res, next) => {
   try {
     const { email, nick, password } = req.body;
     const exUser = await User.findOne({
@@ -46,7 +53,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.post('/logout', (req, res) => {
+router.post('/logout', isLoggedIn, (req, res) => {
   req.logOut();
   req.session.destroy();
   res.send('ok');

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 import useInput from '../hooks/useInput';
-import { SIGN_UP_REQUEST } from '../reducers/user';
+import { SIGN_UP_REQUEST, SIGN_UP_INITIAL } from '../reducers/user';
 import AppLayout from '../components/AppLayout';
 
 const ErrorMessage = styled.div`
@@ -14,11 +14,20 @@ const ErrorMessage = styled.div`
 
 const SignUp = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (me && me.id) {
+      Router.replace('/'); // 뒤로가기 기록이 사라짐
+    }
+  }, [me && me.id]);
 
   useEffect(() => {
     if (signUpDone) {
-      Router.push('/');
+      Router.replace('/');
+      dispatch({
+        type: SIGN_UP_INITIAL,
+      });
     }
   }, [signUpDone]);
 

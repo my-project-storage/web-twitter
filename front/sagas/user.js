@@ -20,35 +20,34 @@ import {
 
 function loginAPI(data) {
   // api 호출
-  return axios.post('/api/login', data);
+  return axios.post('/user/login', data);
 }
 function followAPI(data) {
   // api 호출
-  return axios.post('/api/follow', data);
+  return axios.post('/follow', data);
 }
 function unfollowAPI(data) {
   // api 호출
-  return axios.post('/api/unfollow', data);
+  return axios.post('/unfollow', data);
 }
 function signUpAPI(data) {
   // api 호출
-  return axios.post('http://localhost:9000/user', data);
+  return axios.post('/user', data);
 }
 function logOutAPI() {
-  return axios.post('/api/logout');
+  return axios.post('/user/logout');
 }
 function addPostAPI(data) {
-  return axios.post('/api/posts', data);
+  return axios.post('/posts', data);
 }
 
 function* login(action) {
   try {
-    // const result = yield call(loginAPI, action.data);
-    yield delay(1000);
+    const result = yield call(loginAPI, action.data);
     // pust은 dispatch
     yield put({
       type: LOG_IN_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (err) {
     yield put({
@@ -87,11 +86,10 @@ function* unfollow(action) {
 }
 function* logout() {
   try {
-    // const result = yield call(logOutAPI);
-    yield delay(1000);
+    const result = yield call(logOutAPI);
     yield put({
       type: LOG_OUT_SUCCESS,
-      //   data: result.data,
+      data: result.data,
     });
   } catch (err) {
     yield put({

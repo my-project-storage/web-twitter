@@ -4,6 +4,9 @@ import { all, fork } from 'redux-saga/effects';
 
 import postSaga from './post';
 import userSaga from './user';
+
+axios.defaults.baseURL = 'http://localhost:9000';
+
 /**
  * @description saga를 사용하는 방법
  * todo: 루트 사가 만들기
