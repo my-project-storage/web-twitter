@@ -30,6 +30,7 @@
     "no-param-reassign": "off",
     "implicit-arrow-linebreak": "off",
     "no-confusing-arrow": "off",
-    "react/jsx-wrap-multilines": "off"
+    "react/jsx-wrap-multilines": "off",
+    "no-trailing-spaces": "off"
   }
 }

@@ -5,7 +5,9 @@ import { all, fork } from 'redux-saga/effects';
 import postSaga from './post';
 import userSaga from './user';
 
+// axios 공통
 axios.defaults.baseURL = 'http://localhost:9000';
+axios.defaults.withCredentials = true;
 
 /**
  * @description saga를 사용하는 방법
