@@ -5,6 +5,29 @@ const { User, Post } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middleware');
 
 /**
+ * @description 새로고침
+ * @route GET /user
+ */
+router.get('/', async (req, res, next) => {
+  try {
+    if (req.user) {
+      const fullUserWithoutPw = await User.findOne({
+        attributes: { exclude: ['password'] },
+        where: { id: req.user.id },
+        include: [
+          { model: Post, attributes: ['id'] },
+          { model: User, as: 'Followings', attributes: ['id'] },
+          { model: User, as: 'Followers', attributes: ['id'] },
+        ],
+      });
+      res.status(200).json(fullUserWithoutPw);
+    } else res.status(200).json(null);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * @description 로그인
  * @route POST /user/login
  */
@@ -21,7 +44,11 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
       const fullUserWithoutPw = await User.findOne({
         attributes: { exclude: ['password'] },
         where: { id: user.id },
-        include: [{ model: Post }, { model: User, as: 'Followings' }, { model: User, as: 'Followers' }],
+        include: [
+          { model: Post, attributes: ['id'] },
+          { model: User, as: 'Followings', attributes: ['id'] },
+          { model: User, as: 'Followers', attributes: ['id'] },
+        ],
       });
       return res.status(200).json(fullUserWithoutPw);
     });

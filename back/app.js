@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
+const postsRouter = require('./routes/posts');
 const db = require('./models');
 const session = require('express-session');
 const passportConfig = require('./passport');
@@ -13,8 +14,10 @@ require('dotenv').config();
 
 app.use(
   cors({
-    origin: '*',
-    credentials: false,
+    // credentials 가 true 이면 더 엄격하게 origin을 잡아줘야함
+    // origin true 도 가능함
+    origin: 'http://localhost:3000', // access controll allow origin
+    credentials: true, // access controll allow credentials : true -> 쿠키전달
   })
 );
 passportConfig();
@@ -41,6 +44,7 @@ db.sequelize
     console.error('MYERROR:', err.message);
   });
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 
 // app.use((err,req,res,next)=>{

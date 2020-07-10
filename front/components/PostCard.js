@@ -6,18 +6,26 @@ import { useSelector, useDispatch } from 'react-redux';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import CommentForm from './CommentForm';
-import { REMOVE_POST_REQUEST } from '../reducers/post';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
-  const [liked, setLiked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const id = useSelector((state) => state.user.me?.id);
   const { removePostLoading } = useSelector((state) => state.post);
 
-  const onToggleLike = useCallback(() => {
-    setLiked((prev) => !prev);
+  const onLike = useCallback(() => {
+    dispatch({
+      type: LIKE_POST_REQUEST,
+      data: post.id,
+    });
+  }, []);
+  const onUnLike = useCallback(() => {
+    dispatch({
+      type: UNLIKE_POST_REQUEST,
+      data: post.id,
+    });
   }, []);
   const onRemovePost = useCallback(() => {
     dispatch({
@@ -28,18 +36,14 @@ const PostCard = ({ post }) => {
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
   }, []);
-
+  const liked = post.Likers.find((v) => v.id === id);
   return (
     <div style={{ marginBottom: 20 }}>
       <Card
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
           <RetweetOutlined key="retweet" />,
-          liked ? (
-            <HeartTwoTone twoToneColor="red" key="heart" onClick={onToggleLike} />
-          ) : (
-            <HeartOutlined key="heart" onClick={onToggleLike} />
-          ),
+          liked ? <HeartTwoTone twoToneColor="red" key="heart" onClick={onUnLike} /> : <HeartOutlined key="heart" onClick={onLike} />,
           <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover
             key="more"
@@ -100,6 +104,7 @@ PostCard.propTypes = {
     createdAt: PropTypes.string,
     Comments: PropTypes.arrayOf(PropTypes.object),
     Images: PropTypes.arrayOf(PropTypes.object),
+    Likers: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
 };
 
