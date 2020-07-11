@@ -85,15 +85,15 @@ export const logoutRequestAction = () => ({
   type: LOG_OUT_REQUEST,
 });
 
-// ! dummy
-const dummyUser = (data) => ({
-  ...data,
-  nickname: 'bbaktaeho',
-  id: 1,
-  Posts: [{ id: 1 }],
-  Followings: [{ nickname: 'tt' }, { nickname: 'yy' }, { nickname: 'xx' }],
-  Followers: [{ nickname: 'tt' }, { nickname: 'yy' }, { nickname: 'xx' }],
-});
+// // ! dummy
+// const dummyUser = (data) => ({
+//   ...data,
+//   nickname: 'bbaktaeho',
+//   id: 1,
+//   Posts: [{ id: 1 }],
+//   Followings: [{ nickname: 'tt' }, { nickname: 'yy' }, { nickname: 'xx' }],
+//   Followers: [{ nickname: 'tt' }, { nickname: 'yy' }, { nickname: 'xx' }],
+// });
 
 // ! user reducer
 const reducer = (state = initialState, action) =>
@@ -193,6 +193,7 @@ const reducer = (state = initialState, action) =>
 
       case CHANGE_NICKNAME_SUCCESS:
         draft.changeNicknameLoading = false;
+        draft.me.nickname = action.data.nickname;
         draft.changeNicknameDone = true;
         break;
       case CHANGE_NICKNAME_FAILURE:

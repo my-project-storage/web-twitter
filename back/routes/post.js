@@ -54,15 +54,27 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
 
 /**
  * @description 게시글 삭제
- * @route DELETE /post
+ * @route DELETE /post/:postId
  */
-router.delete('/', (req, res) => {});
+router.delete('/:postId', isLoggedIn, async (req, res, next) => {
+  try {
+    await Post.destroy({
+      where: {
+        id: Number(req.params.postId),
+        UserId: req.user.id,
+      },
+    });
+    res.status(200).json({ PostId: Number(req.params.postId) });
+  } catch (err) {
+    next(err);
+  }
+});
 
 /**
  * @description 좋아요
  * @route PATCH /post/:postId/like
  */
-router.patch('/:postId/like', async (req, res, next) => {
+router.patch('/:postId/like', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({
       where: { id: Number(req.params.postId) },
@@ -79,7 +91,7 @@ router.patch('/:postId/like', async (req, res, next) => {
  * @description 좋아요 취소
  * @route DELETE /post/:postId/like
  */
-router.delete('/:postId/like', async (req, res, next) => {
+router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({
       where: { id: Number(req.params.postId) },

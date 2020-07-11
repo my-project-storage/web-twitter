@@ -29,7 +29,7 @@ function loadPostsAPI(data) {
   return axios.get('/posts', data);
 }
 function removePostAPI(data) {
-  return axios.delete('/api/post', data);
+  return axios.delete(`/post/${data}`);
 }
 function addCommentAPI(data) {
   return axios.post(`/post/${data.postId}/comment`, data);
@@ -79,15 +79,12 @@ function* loadPosts(action) {
 }
 function* removePost(action) {
   try {
-    // const result = yield call(addPostAPI, action.data);
-    yield delay(1000);
+    const result = yield call(removePostAPI, action.data);
     yield put({
-      // post reducer 의 상태를 변경
       type: REMOVE_POST_SUCCESS,
-      data: action.data, // 어떤 게시물을 지웠는지 게시물의 아이디가 들어있음
+      data: result.data,
     });
     yield put({
-      // user reducer 의 상태를 변경
       type: REMOVE_POST_OF_ME,
       data: action.data,
     });
@@ -126,7 +123,6 @@ function* likePost(action) {
     });
   }
 }
-
 function* unLikePost(action) {
   try {
     const result = yield call(unlikePostAPI, action.data);
