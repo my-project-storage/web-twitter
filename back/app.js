@@ -36,7 +36,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 db.sequelize
-  .sync()
+  .sync({ force: false })
   .then(() => {
     console.log('db 연결 성공');
   })
