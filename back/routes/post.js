@@ -1,17 +1,54 @@
 const router = require('express').Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const { Post, Comment, Image, User } = require('../models');
 const { isLoggedIn } = require('./middleware');
+
+// ! directory exists
+try {
+  fs.accessSync('uploads');
+} catch (err) {
+  fs.mkdirSync('uploads');
+}
+
+// ! upload config
+const upload = multer({
+  storage: multer.diskStorage({
+    // 어디다가 저장할건지
+    destination(req, file, done) {
+      done(null, 'uploads');
+    },
+    filename(req, file, done) {
+      const ext = path.extname(file.originalname); // 확장자 추출
+      const basename = path.basename(file.originalname, ext); // 파일이름
+      done(null, basename + '_' + new Date().getTime() + ext);
+    },
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20mb, 크기 제한
+});
 
 /**
  * @description 게시글 작성
  * @route POST /post
  */
-router.post('/', isLoggedIn, async (req, res, next) => {
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
   try {
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
+    if (req.body.image) {
+      if (Array.isArray(req.body.image)) {
+        // 여러 개의 이미지라면 배열로 옴
+        const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })));
+        await post.addImages(images);
+      } else {
+        // 하나의 이미지는 배열이 아님
+        const image = await Image.create({ src: req.body.image });
+        await post.addImages(image);
+      }
+    }
     const fullPost = await Post.findOne({
       where: { id: post.id },
       include: [
@@ -22,6 +59,19 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       ],
     });
     res.status(201).json(fullPost);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * @description 게시글에 이미지 업로드
+ * @route POST /post/images
+ */
+router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {
+  try {
+    console.log(req.files);
+    res.json(req.files.map((v) => v.filename));
   } catch (err) {
     next(err);
   }

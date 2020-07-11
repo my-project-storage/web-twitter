@@ -16,10 +16,17 @@ const ImagesZoom = ({ images, onClose }) => {
       </Header>
       <SlickWrapper>
         <div>
-          <Slick initialSlide={0} afterChange={(slide) => setCurrentSlide(slide)} infinite arrows={false} slidesToShow={1} slidesToScroll={1}>
+          <Slick
+            initialSlide={0}
+            afterChange={(slide) => setCurrentSlide(slide)}
+            infinite
+            arrows={false}
+            slidesToShow={1}
+            slidesToScroll={1}
+          >
             {images.map((v, i) => (
               <ImgWrapper key={i}>
-                <img src={v.src} alt={v.src} />
+                <img src={`http://localhost:9000/${v.src}`} alt={v.src} />
               </ImgWrapper>
             ))}
           </Slick>

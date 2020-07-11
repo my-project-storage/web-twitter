@@ -10,8 +10,10 @@ const passportConfig = require('./passport');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const path = require('path');
 require('dotenv').config();
 
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(
   cors({
     // credentials 가 true 이면 더 엄격하게 origin을 잡아줘야함
