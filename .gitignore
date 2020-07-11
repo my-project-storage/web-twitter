@@ -5,3 +5,6 @@ node_modules
 # database
 # back/config/dbConfig.json
 dbConfig.json
+
+# uploads directory
+uploads
