@@ -7,6 +7,11 @@ export const initialState = {
   loadUserDone: false,
   loadUserError: null,
 
+  // todo: loadMyInfo
+  loadMyInfoLoading: false,
+  loadMyInfoDone: false,
+  loadMyInfoError: null,
+
   // todo: loadFollowers
   loadFollowersLoading: false,
   loadFollowersDone: false,
@@ -54,11 +59,14 @@ export const initialState = {
 
   // todo: user etc..
   me: null,
-  signUpData: {},
-  loginData: {},
+  userInfo: null,
 };
 
 // ! action definition
+export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
+export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
+export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
+
 export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST';
 export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
 export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
@@ -126,6 +134,20 @@ export const logoutRequestAction = () => ({
 const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case LOAD_MY_INFO_REQUEST:
+        draft.loadMyInfoLoading = true;
+        draft.loadMyInfoDone = false;
+        draft.loadMyInfoError = null;
+        break;
+      case LOAD_MY_INFO_SUCCESS:
+        draft.loadMyInfoLoading = false;
+        draft.me = action.data;
+        draft.loadMyInfoDone = true;
+        break;
+      case LOAD_MY_INFO_FAILURE:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoError = action.error;
+        break;
       case LOAD_USER_REQUEST:
         draft.loadUserLoading = true;
         draft.loadUserDone = false;
@@ -133,7 +155,7 @@ const reducer = (state = initialState, action) =>
         break;
       case LOAD_USER_SUCCESS:
         draft.loadUserLoading = false;
-        draft.me = action.data;
+        draft.userInfo = action.data;
         draft.loadUserDone = true;
         break;
       case LOAD_USER_FAILURE:

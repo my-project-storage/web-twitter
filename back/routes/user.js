@@ -5,11 +5,12 @@ const { User, Post } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middleware');
 
 /**
- * @description 새로고침
+ * @description 새로고침, 내 정보 불러오기
  * @route GET /user
  */
 router.get('/', async (req, res, next) => {
   try {
+    console.log(req.headers);
     if (req.user) {
       const fullUserWithoutPw = await User.findOne({
         attributes: { exclude: ['password'] },

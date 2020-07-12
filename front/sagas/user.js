@@ -31,18 +31,21 @@ import {
   REMOVE_FOLLOWER_REQUEST,
   REMOVE_FOLLOWER_SUCCESS,
   REMOVE_FOLLOWER_FAILURE,
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
+  LOAD_MY_INFO_FAILURE,
 } from '../reducers/user';
 
-function loadUserAPI() {
-  // api 호출
+function loadUserAPI(data) {
+  return axios.get(`/user/${data}`);
+}
+function loadMyInfoAPI() {
   return axios.get('/user');
 }
 function loadFollowersAPI(data) {
-  // api 호출
   return axios.get('/user/followers', data);
 }
 function loadFollowingsAPI(data) {
-  // api 호출
   return axios.get('/user/followings', data);
 }
 function loginAPI(data) {
@@ -78,6 +81,21 @@ function* loadUser(action) {
   } catch (err) {
     yield put({
       type: LOAD_USER_FAILURE,
+      error: err.response.data, // 요청에 실패하면 err.response.data 에 담겨있음
+    });
+  }
+}
+function* loadMyInfo(action) {
+  try {
+    const result = yield call(loadMyInfoAPI);
+    // pust은 dispatch
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
       error: err.response.data, // 요청에 실패하면 err.response.data 에 담겨있음
     });
   }
@@ -218,6 +236,10 @@ function* watchLoadUser() {
   // take 는 액션이 실행될 때 까지 기다림
   yield takeLatest(LOAD_USER_REQUEST, loadUser);
 }
+function* watchLoadMyInfo() {
+  // take 는 액션이 실행될 때 까지 기다림
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
 function* watchLoadFollowers() {
   yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
 }
@@ -257,6 +279,7 @@ export default function* userSaga() {
     fork(watchLogOut),
     fork(watchSignUp),
     fork(watchLoadUser),
+    fork(watchLoadMyInfo),
     fork(watchChangeNickname),
   ]);
 }
