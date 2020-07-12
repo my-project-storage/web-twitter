@@ -48,10 +48,6 @@ const PostCard = ({ post }) => {
   }, []);
   const liked = post.Likers.find((v) => v.id === id);
 
-  if (post.RetweetId) {
-    console.log('Retweet post likers : ', post.Likers);
-  }
-
   return (
     <div style={{ marginBottom: 20 }}>
       <Card

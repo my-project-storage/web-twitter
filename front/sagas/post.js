@@ -34,8 +34,8 @@ function retweetAPI(data) {
 function addPostAPI(data) {
   return axios.post('/post', data);
 }
-function loadPostsAPI(data) {
-  return axios.get('/posts', data);
+function loadPostsAPI(lastId) {
+  return axios.get(`/posts?lastId=${lastId || 0}`);
 }
 function removePostAPI(data) {
   return axios.delete(`/post/${data}`);
@@ -87,8 +87,8 @@ function* addPost(action) {
 }
 function* loadPosts(action) {
   try {
-    const result = yield call(loadPostsAPI, action.data);
-    console.log('saga:', result.data);
+    const result = yield call(loadPostsAPI, action.lastId);
+    // console.log('saga:', result.data);
 
     yield put({
       type: LOAD_POSTS_SUCCESS,
