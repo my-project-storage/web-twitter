@@ -4,9 +4,12 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
+import axios from 'axios';
+import { END } from 'redux-saga';
 import useInput from '../hooks/useInput';
-import { SIGN_UP_REQUEST, SIGN_UP_INITIAL } from '../reducers/user';
+import { SIGN_UP_REQUEST, SIGN_UP_INITIAL, LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import AppLayout from '../components/AppLayout';
+import wrapper from '../store/configureStore';
 
 const ErrorMessage = styled.div`
   color: red;
@@ -111,5 +114,21 @@ const SignUp = () => {
     </AppLayout>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  // ! ----------------서버에서 서버로 쿠키 보내기------------------
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = ''; // 일단 쿠키를 비워주고나서
+  if (context.req && cookie) axios.defaults.headers.Cookie = cookie; // 있다면 새로 넣어줌
+  // ! -----------------------------------------------------------
+
+  context.store.dispatch({ type: LOAD_MY_INFO_REQUEST });
+
+  // saga를 ssr 로 이용하기 위한 기본 셋팅
+  context.store.dispatch(END); // 디스패치의 success를 기다려줌
+  await context.store.sagaTask.toPromise(); // store index에 등록되어있음
+
+  // 실행된 결과를 HYDRATE 가 받아줌
+});
 
 export default SignUp;

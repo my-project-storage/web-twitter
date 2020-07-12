@@ -21,12 +21,12 @@ const AppLayout = ({ children }) => {
       <Menu mode="horizontal">
         <Menu.Item>
           <Link href="/">
-            <a>노드버드</a>
+            <a>Bbakwitter</a>
           </Link>
         </Menu.Item>
         <Menu.Item>
           <Link href="/profile">
-            <a>프로필</a>
+            <a>내 정보</a>
           </Link>
         </Menu.Item>
         <Menu.Item>
