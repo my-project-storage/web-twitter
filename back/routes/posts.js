@@ -11,6 +11,11 @@ router.get('/', async (req, res, next) => {
         { model: Image },
         { model: Comment, include: [{ model: User, attributes: ['id', 'nickname'], order: [['createdAt', 'DESC']] }] },
         { model: User, as: 'Likers', attributes: ['id'] },
+        {
+          model: Post,
+          as: 'Retweet',
+          include: [{ model: User, attributes: ['id', 'nickname'] }, { model: Image }],
+        },
       ],
       //   where: { id: lastId }, // 마지막으로 불러와진 id
     });
