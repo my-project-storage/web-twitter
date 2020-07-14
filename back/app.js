@@ -4,6 +4,7 @@ const cors = require('cors');
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 const postsRouter = require('./routes/posts');
+const hashtagRouter = require('./routes/hashtag');
 const db = require('./models');
 const session = require('express-session');
 const passportConfig = require('./passport');
@@ -48,6 +49,7 @@ db.sequelize
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
+app.use('/hashtag', hashtagRouter);
 
 // app.use((err,req,res,next)=>{
 
