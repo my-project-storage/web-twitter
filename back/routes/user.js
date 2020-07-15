@@ -95,34 +95,6 @@ router.get('/', async (req, res, next) => {
 });
 
 /**
- * @description 사용자 정보 불러오기
- * @route GET /user/:userId
- */
-router.get('/:userId', async (req, res, next) => {
-  try {
-    const fullUserWithoutPw = await User.findOne({
-      attributes: { exclude: ['password'] },
-      where: { id: req.params.userId },
-      include: [
-        { model: Post, attributes: ['id'] },
-        { model: User, as: 'Followings', attributes: ['id'] },
-        { model: User, as: 'Followers', attributes: ['id'] },
-      ],
-    });
-    if (fullUserWithoutPw) {
-      const data = fullUserWithoutPw.toJSON();
-      // 개인정보 침해 예방
-      data.Posts = data.Posts.length;
-      data.Followers = data.Followers.length;
-      data.Followings = data.Followings.length;
-      res.status(200).json(data);
-    } else res.status(404).json('존재하지 않는 사용자입니다.');
-  } catch (err) {
-    next(err);
-  }
-});
-
-/**
  * @description 로그인
  * @route POST /user/login
  */
@@ -242,7 +214,9 @@ router.get('/followers', isLoggedIn, async (req, res, next) => {
     const user = await User.findOne({ where: { id: req.user.id } });
     if (!user) return res.status(403).send('없는 사람입니다.');
 
-    let followers = await user.getFollowers();
+    let followers = await user.getFollowers({
+      limit: Number(req.query.limit),
+    });
     const result = followers.map((follower) => {
       delete follower.dataValues.password;
       return follower;
@@ -262,7 +236,9 @@ router.get('/followings', isLoggedIn, async (req, res, next) => {
     const user = await User.findOne({ where: { id: req.user.id } });
     if (!user) return res.status(403).send('없는 사람입니다.');
 
-    const followings = await user.getFollowings();
+    const followings = await user.getFollowings({
+      limit: Number(req.query.limit),
+    });
     res.status(200).json(followings); // action.data
   } catch (err) {
     next(err);
@@ -277,6 +253,34 @@ router.post('/logout', isLoggedIn, (req, res) => {
   req.logOut();
   req.session.destroy();
   res.send('ok');
+});
+
+/**
+ * @description 사용자 정보 불러오기
+ * @route GET /user/:userId
+ */
+router.get('/:userId', async (req, res, next) => {
+  try {
+    const fullUserWithoutPw = await User.findOne({
+      attributes: { exclude: ['password'] },
+      where: { id: req.params.userId },
+      include: [
+        { model: Post, attributes: ['id'] },
+        { model: User, as: 'Followings', attributes: ['id'] },
+        { model: User, as: 'Followers', attributes: ['id'] },
+      ],
+    });
+    if (fullUserWithoutPw) {
+      const data = fullUserWithoutPw.toJSON();
+      // 개인정보 침해 예방
+      data.Posts = data.Posts.length;
+      data.Followers = data.Followers.length;
+      data.Followings = data.Followings.length;
+      res.status(200).json(data);
+    } else res.status(404).json('존재하지 않는 사용자입니다.');
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
