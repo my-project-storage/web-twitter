@@ -43,14 +43,14 @@ function retweetAPI(data) {
 function addPostAPI(data) {
   return axios.post('/post', data);
 }
-function loadPostsAPI(data, lastId) {
+function loadPostsAPI(lastId) {
   return axios.get(`/posts?lastId=${lastId || 0}`);
 }
 function loadUserPostsAPI(data, lastId) {
   return axios.get(`/user/${data}/posts?lastId=${lastId || 0}`);
 }
 function loadHashtagPostsAPI(data, lastId) {
-  return axios.get(`/hashtag/${data}?lastId=${lastId || 0}`);
+  return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`);
 }
 function loadPostAPI(data) {
   return axios.get(`/post/${data}`);
@@ -129,6 +129,8 @@ function* loadUserPosts(action) {
       data: result.data,
     });
   } catch (err) {
+    console.error('여기 에러있습니다.', err);
+
     yield put({
       type: LOAD_USER_POSTS_FAILURE,
       error: err.resonse.data,

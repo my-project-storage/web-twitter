@@ -16,13 +16,13 @@ const User = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
-  const { mainPosts, hasMorePosts, loadUserPostsLoading } = useSelector((state) => state.post);
+  const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.user);
 
   useEffect(() => {
     const onScroll = () => {
       if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-        if (hasMorePosts && !loadUserPostsLoading) {
+        if (hasMorePosts && !loadPostsLoading) {
           dispatch({
             type: LOAD_USER_POSTS_REQUEST,
             lastId: mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id,
@@ -35,8 +35,7 @@ const User = () => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [mainPosts, hasMorePosts, id, loadUserPostsLoading]);
-  console.log('메인포스트', mainPosts);
+  }, [mainPosts, hasMorePosts, id, loadPostsLoading]);
   return (
     <AppLayout>
       <Head>
@@ -99,8 +98,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   });
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();
-  console.log('getState', context.store.getState().post.mainPosts);
-  return { props: {} };
 });
 
 export default User;

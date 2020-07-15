@@ -10,7 +10,7 @@ const Root = ({ Component }) => (
   <>
     <Head>
       <meta charSet="utf-8" />
-      <title>NodeBird</title>
+      <title>Bbakwitter</title>
     </Head>
     <Component />
   </>
