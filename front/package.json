@@ -4,18 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next -p 3000"
+    "dev": "next -p 3000",
+    "build": "cross-env ANALYZE=true NODE_ENV=production next build"
   },
   "keywords": [],
   "author": "Bbaktaeho",
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
+    "@next/bundle-analyzer": "^9.4.4",
     "antd": "^4.4.0",
     "axios": "^0.19.2",
     "babel-plugin-styled-components": "^1.10.7",
+    "compression-webpack-plugin": "^4.0.0",
+    "cross-env": "^7.0.2",
     "faker": "^4.1.0",
     "immer": "^7.0.5",
+    "moment": "^2.27.0",
     "next": "^9.4.4",
     "next-redux-wrapper": "^6.0.2",
     "prop-types": "^15.7.2",
