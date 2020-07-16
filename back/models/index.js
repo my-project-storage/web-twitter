@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
-const config = require('../config/dbConfig')[env];
+const config = require('../config/config')[env];
 const db = {};
 
 // connect mysql
