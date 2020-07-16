@@ -8,3 +8,6 @@ dbConfig.json
 
 # uploads directory
 uploads
+
+# pem
+web-twitter.pem
